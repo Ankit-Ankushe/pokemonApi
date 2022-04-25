@@ -21,7 +21,7 @@
         {
             await getPokemon(i);
             let pokemon = document.createElement("li");
-            pokemon.innerText = pokedex[i]["name"].toUpperCase();
+            pokemon.innerText = pokedex[i]["name"];
 
             document.getElementById("list").append(pokemon);
 
@@ -36,7 +36,7 @@
 
         let pokeName = pokemon.name;
         let pokeType = pokemon.types;
-        let pokeImg = pokemon["species"]["url"];
+        let pokeImg = pokemon["sprites"]["back_default"];
 
         res =await fetch(pokemon["sprites"]["back_default"]);
 
@@ -67,7 +67,7 @@
                 var name = document.createElement("p")
                 name.innerText =  pokeData[i].name;
 
-                box.append(img,name,type)
+                box.append(img,name)
                 document.getElementById("layout").append(box);
             }
         }
