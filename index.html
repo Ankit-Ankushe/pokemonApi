@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pokemon API</title>
+</head>
+<body>
+    <input type="text" id="inputName" placeholder="pokemon name" />
+    <button onclick="pokeFunc()">Search</button>
+    <ol id="list"> 
+    </ol>
+    <div id="layout"></div>
+</body>
+<script>
+    var pokedex = {};
+    window.onload = async function(){
+        // getPokemon(1);
+        for( let i=1;i<=20;i++)
+        {
+            await getPokemon(i);
+            let pokemon = document.createElement("li");
+            pokemon.innerText = pokedex[i]["name"].toUpperCase();
+
+            document.getElementById("list").append(pokemon);
+
+        }
+        localStorage.setItem("pokemonData" , JSON.stringify(pokedex))
+        console.log(pokedex)
+    }
+    async function getPokemon(num){
+        let url = "https://pokeapi.co/api/v2/pokemon/" +num.toString();
+        let res =await fetch(url);
+        let pokemon = await res.json();
+
+        let pokeName = pokemon.name;
+        let pokeType = pokemon.types;
+        let pokeImg = pokemon["species"]["url"];
+
+        res =await fetch(pokemon["sprites"]["back_default"]);
+
+       pokedex[num] = {
+           "name" : pokeName , "img" : pokeImg , "types" : pokeType 
+       }
+    }
+    
+    
+    function pokeFunc(searchName){
+        var flag = false;
+        var pokeData = JSON.parse(localStorage.getItem("pokemonData"))
+        // console.log(pokeData[1].name)
+        var searchName = document.getElementById("inputName").value;
+        console.log(searchName)
+        for(var i=1 ;i<=20;i++){
+            console.log(pokeData[i].img)
+            if(searchName == pokeData[i].name){
+                flag = true;
+                var box =document.createElement("div")
+
+                var img =document.createElement("img");
+                img.src =pokeData[i].img;
+
+                var type = document.createElement("p");
+                type.innerText =pokeData[i].types;
+
+                var name = document.createElement("p")
+                name.innerText =  pokeData[i].name;
+
+                box.append(img,name,type)
+                document.getElementById("layout").append(box);
+            }
+        }
+        if(flag == false){
+            alert("notfound")
+        }
+    }
+</script>
+</html>
